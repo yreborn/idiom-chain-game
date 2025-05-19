@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成语接龙</title>
+    <style>
+        body {
+            font-family: 'KaiTi', '楷体', serif;
+            background-image: url('https://img.freepik.com/free-vector/traditional-chinese-landscape-painting_52683-92963.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        
+        .game-container {
+            background-color: rgba(255, 248, 220, 0.9);
+            border: 3px solid #8B4513;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .game-title {
+            font-size: 2.8rem;
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.3);
+        }
+        
+        .game-area {
+            margin: 20px 0;
+        }
+        
+        .current-idiom {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #8B4513;
+            min-height: 50px;
+        }
+        
+        .last-char {
+            color: #B22222;
+            font-weight: bold;
+            font-size: 2.2rem;
+        }
+        
+        input {
+            width: 70%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: 'KaiTi', '楷体', serif;
+            background-color: rgba(255, 248, 220, 0.8);
+        }
+        
+        button {
+            background-color: #8B4513;
+            color: #FFF8DC;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+        
+        button:hover {
+            background-color: #A0522D;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .history {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #D2B48C;
+            border-radius: 8px;
+            background-color: rgba(255, 248, 220, 0.7);
+        }
+        
+        .history-title {
+            text-align: center;
+            color: #8B4513;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .history-item {
+            margin: 5px 0;
+            color: #5C3317;
+        }
+        
+        .feedback {
+            height: 25px;
+            color: #B22222;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .score {
+            font-size: 1.3rem;
+            color: #8B4513;
+            margin: 15px 0;
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.7;
+        }
+        
+        .decoration.top-left {
+            top: -30px;
+            left: -30px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
+        }
+        
+        .decoration.top-right {
+            top: -30px;
+            right: -30px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
+            transform: rotate(90deg);
+        }
+        
+        .decoration.bottom-left {
+            bottom: -30px;
+            left: -30px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
+            transform: rotate(270deg);
+        }
+        
+        .decoration.bottom-right {
+            bottom: -30px;
+            right: -30px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="decoration top-left"></div>
+        <div class="decoration top-right"></div>
+        <div class="decoration bottom-left"></div>
+        <div class="decoration bottom-right"></div>
+        
+        <h1 class="game-title">成语接龙</h1>
+        
+        <div class="game-area">
+            <div class="current-idiom" id="currentIdiom">
+                请输入一个成语开始游戏
+            </div>
+            
+            <input type="text" id="idiomInput" placeholder="请输入成语..." />
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <button id="submitBtn">提交</button>
+            <button id="hintBtn">提示</button>
+            <button id="resetBtn">重新开始</button>
+            
+            <div class="score">
+                当前分数: <span id="score">0</span>
+            </div>
+        </div>
+        
+        <div class="history">
+            <div class="history-title">成语记录</div>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <script>
+        // 成语数据库（部分常见成语）
+        const idioms = [
+            "一帆风顺", "顺水推舟", "舟车劳顿", "顿开茅塞", "塞翁失马", "马到成功", 
+            "功成名就", "就地取材", "材大难用", "用心良苦", "苦尽甘来", "来日方长",
+            "长生不老", "老马识途", "途经险阻", "阻碍不前", "前因后果", "果然如此",
+            "此地无银", "银样镴枪", "枪林弹雨", "雨过天晴", "晴天霹雳", "雳霆万钧",
+            "钧天广乐", "乐不思蜀", "蜀犬吠日", "日新月异", "异想天开", "开门见山",
+            "山明水秀", "秀色可餐", "餐风宿露", "露宿风餐", "餐风饮露", "露出马脚",
+            "脚踏实地", "地动山摇", "摇头晃脑", "脑满肠肥", "肥头大耳", "耳聪目明",
+            "明察秋毫", "毫不犹豫", "豫莫大焉", "焉得虎子", "子虚乌有", "有口皆碑",
+            "碑文谶语", "语重心长", "长年累月", "月白风清", "清风明月", "月下老人",
+            "人定胜天", "天长地久", "久而久之", "之乎者也", "也无风雨", "雨过天青",
+            "青山绿水", "水滴石穿", "穿针引线", "线断风筝", "筝柱弦断", "断线风筝",
+            "筝柱断弦", "弦外之音", "音容笑貌", "貌合神离", "离经叛道", "道听途说",
+            "说三道四", "四面楚歌", "歌功颂德", "德高望重", "重蹈覆辙", "辙乱旗靡",
+            "靡靡之音", "音信杳无", "无独有偶", "偶一为之", "之死靡它", "它山之石",
+            "石破天惊", "惊弓之鸟", "鸟语花香", "香火不绝", "绝无仅有", "有志竟成",
+            "成千上万", "万水千山", "山高水长", "长生不老", "老当益壮", "壮志凌云",
+            "云淡风轻", "轻歌曼舞", "舞文弄墨", "墨守成规", "规行矩步", "步步为营",
+            "营私舞弊", "弊绝风清", "清正廉明", "明辨是非", "非同小可", "可歌可泣"
+        ];
+        
+        // 游戏变量
+        let currentIdiom = "";
+        let usedIdioms = [];
+        let score = 0;
+        
+        // DOM元素
+        const currentIdiomElement = document.getElementById("currentIdiom");
+        const idiomInput = document.getElementById("idiomInput");
+        const submitBtn = document.getElementById("submitBtn");
+        const hintBtn = document.getElementById("hintBtn");
+        const resetBtn = document.getElementById("resetBtn");
+        const feedbackElement = document.getElementById("feedback");
+        const scoreElement = document.getElementById("score");
+        const historyList = document.getElementById("historyList");
+        
+        // 事件监听
+        submitBtn.addEventListener("click", submitIdiom);
+        hintBtn.addEventListener("click", getHint);
+        resetBtn.addEventListener("click", resetGame);
+        idiomInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                submitIdiom();
+            }
+        });
+        
+        // 提交成语
+        function submitIdiom() {
+            const input = idiomInput.value.trim();
+            
+            if (input.length === 0) {
+                showFeedback("请输入成语");
+                return;
+            }
+            
+            if (input.length !== 4) {
+                showFeedback("请输入四字成语");
+                return;
+            }
+            
+            if (!isValidIdiom(input)) {
+                showFeedback("这不是一个有效的成语");
+                return;
+            }
+            
+            if (usedIdioms.includes(input)) {
+                showFeedback("这个成语已经使用过了");
+                return;
+            }
+            
+            // 第一个成语或者符合接龙规则
+            if (currentIdiom === "" || input.charAt(0) === currentIdiom.charAt(currentIdiom.length - 1)) {
+                // 成功接龙
+                currentIdiom = input;
+                usedIdioms.push(input);
+                score++;
+                scoreElement.textContent = score;
+                
+                // 更新显示
+                updateCurrentIdiom();
+                addToHistory(input);
+                showFeedback("");
+                idiomInput.value = "";
+            } else {
+                showFeedback("接龙失败，请以\"" + currentIdiom.charAt(currentIdiom.length - 1) + "\"字开头");
+            }
+        }
+        
+        // 获取提示
+        function getHint() {
+            if (currentIdiom === "") {
+                showFeedback("请先输入一个成语开始游戏");
+                return;
+            }
+            
+            const lastChar = currentIdiom.charAt(currentIdiom.length - 1);
+            const possibleIdioms = idioms.filter(function(idiom) {
+                return idiom.charAt(0) === lastChar && !usedIdioms.includes(idiom);
+            });
+            
+            if (possibleIdioms.length > 0) {
+                const hint = possibleIdioms[Math.floor(Math.random() * possibleIdioms.length)];
+                showFeedback("提示：" + hint);
+            } else {
+                // 如果没有找到匹配的成语，给出一个通用提示
+                showFeedback("提示：尝试以\"" + lastChar + "\"字开头的成语");
+            }
+        }
+        
+        // 重置游戏
+        function resetGame() {
+            currentIdiom = "";
+            usedIdioms = [];
+            score = 0;
+            scoreElement.textContent = score;
+            currentIdiomElement.innerHTML = "请输入一个成语开始游戏";
+            historyList.innerHTML = "";
+            idiomInput.value = "";
+            showFeedback("");
+        }
+        
+        // 检查成语是否有效
+        function isValidIdiom(idiom) {
+            // 允许用户输入的成语不在预设列表中，只要是四字成语即可
+            if (idiom.length === 4) {
+                return true;
+            }
+            return idioms.includes(idiom);
+        }
+        
+        // 更新当前成语显示
+        function updateCurrentIdiom() {
+            if (currentIdiom) {
+                const lastChar = currentIdiom.charAt(currentIdiom.length - 1);
+                const displayText = currentIdiom.substring(0, currentIdiom.length - 1) + 
+                                   '<span class="last-char">' + lastChar + '</span>';
+                currentIdiomElement.innerHTML = displayText;
+            } else {
+                currentIdiomElement.innerHTML = "请输入一个成语开始游戏";
+            }
+        }
+        
+        // 添加到历史记录
+        function addToHistory(idiom) {
+            const historyItem = document.createElement("div");
+            historyItem.className = "history-item";
+            historyItem.textContent = idiom;
+            historyList.appendChild(historyItem);
+            historyList.scrollTop = historyList.scrollHeight;
+        }
+        
+        // 显示反馈信息
+        function showFeedback(message) {
+            feedbackElement.textContent = message;
+        }
+    </script>
+</body>
+</html>

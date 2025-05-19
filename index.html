@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>成语接龙</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        
         body {
-            font-family: 'KaiTi', '楷体', serif;
-            background-image: url('https://img.freepik.com/free-vector/traditional-chinese-landscape-painting_52683-92963.jpg');
-            background-size: cover;
-            background-position: center;
+            font-family: 'Noto Sans JP', 'Microsoft YaHei', sans-serif;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f0e6f6"/><path d="M0,0 L100,100 M20,0 L100,80 M40,0 L100,60 M60,0 L100,40 M80,0 L100,20 M0,20 L80,100 M0,40 L60,100 M0,60 L40,100 M0,80 L20,100" stroke="%23d6c6e6" stroke-width="1"/></svg>');
+            background-color: #f0e6f6;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,10 +20,10 @@
         }
         
         .game-container {
-            background-color: rgba(255, 248, 220, 0.9);
-            border: 3px solid #8B4513;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 3px solid #9370DB;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(147, 112, 219, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 30px;
             width: 90%;
             max-width: 600px;
@@ -32,9 +33,11 @@
         
         .game-title {
             font-size: 2.8rem;
-            color: #8B4513;
+            color: #6A5ACD;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.3);
+            text-shadow: 3px 3px 0px rgba(106, 90, 205, 0.2);
+            font-weight: 700;
+            letter-spacing: 2px;
         }
         
         .game-area {
@@ -44,47 +47,60 @@
         .current-idiom {
             font-size: 2rem;
             margin: 20px 0;
-            color: #8B4513;
+            color: #483D8B;
             min-height: 50px;
+            font-weight: bold;
         }
         
         .last-char {
-            color: #B22222;
+            color: #FF69B4;
             font-weight: bold;
             font-size: 2.2rem;
+            text-shadow: 1px 1px 2px rgba(255, 105, 180, 0.3);
         }
         
         input {
             width: 70%;
             padding: 12px;
             font-size: 1.2rem;
-            border: 2px solid #8B4513;
-            border-radius: 8px;
+            border: 2px solid #9370DB;
+            border-radius: 30px;
             margin-bottom: 15px;
-            font-family: 'KaiTi', '楷体', serif;
-            background-color: rgba(255, 248, 220, 0.8);
+            font-family: 'Noto Sans JP', 'Microsoft YaHei', sans-serif;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 3px 10px rgba(147, 112, 219, 0.2);
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
         }
         
         button {
-            background-color: #8B4513;
-            color: #FFF8DC;
+            background-color: #9370DB;
+            color: white;
             border: none;
             padding: 12px 25px;
             font-size: 1.2rem;
-            border-radius: 8px;
+            border-radius: 30px;
             cursor: pointer;
             transition: all 0.3s;
             margin: 5px;
-            font-family: 'KaiTi', '楷体', serif;
+            font-family: 'Noto Sans JP', 'Microsoft YaHei', sans-serif;
+            box-shadow: 0 4px 0 #7B68EE;
         }
         
         button:hover {
-            background-color: #A0522D;
-            transform: translateY(-2px);
+            background-color: #8A2BE2;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 0 #7B68EE;
         }
         
         button:active {
             transform: translateY(1px);
+            box-shadow: 0 2px 0 #7B68EE;
         }
         
         .history {
@@ -93,34 +109,40 @@
             max-height: 150px;
             overflow-y: auto;
             padding: 10px;
-            border: 1px solid #D2B48C;
-            border-radius: 8px;
-            background-color: rgba(255, 248, 220, 0.7);
+            border: 2px solid #DDA0DD;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: inset 0 0 10px rgba(221, 160, 221, 0.3);
         }
         
         .history-title {
             text-align: center;
-            color: #8B4513;
+            color: #8A2BE2;
             margin-bottom: 10px;
             font-size: 1.3rem;
+            font-weight: bold;
         }
         
         .history-item {
             margin: 5px 0;
-            color: #5C3317;
+            color: #483D8B;
+            padding: 5px;
+            border-bottom: 1px dashed #DDA0DD;
         }
         
         .feedback {
             height: 25px;
-            color: #B22222;
+            color: #FF69B4;
             margin: 10px 0;
             font-size: 1.1rem;
+            font-weight: bold;
         }
         
         .score {
             font-size: 1.3rem;
-            color: #8B4513;
+            color: #8A2BE2;
             margin: 15px 0;
+            font-weight: bold;
         }
         
         .decoration {
@@ -133,28 +155,25 @@
         .decoration.top-left {
             top: -30px;
             left: -30px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%239370DB" d="M50,20 L60,40 L80,50 L60,60 L50,80 L40,60 L20,50 L40,40 Z"/></svg>');
         }
         
         .decoration.top-right {
             top: -30px;
             right: -30px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
-            transform: rotate(90deg);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23FF69B4" d="M50,20 L60,40 L80,50 L60,60 L50,80 L40,60 L20,50 L40,40 Z"/></svg>');
         }
         
         .decoration.bottom-left {
             bottom: -30px;
             left: -30px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
-            transform: rotate(270deg);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23FF69B4" d="M50,20 L60,40 L80,50 L60,60 L50,80 L40,60 L20,50 L40,40 Z"/></svg>');
         }
         
         .decoration.bottom-right {
             bottom: -30px;
             right: -30px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%238B4513" d="M30,30 C30,50 50,50 50,30 C50,50 70,50 70,30 C70,50 50,70 30,50 Z"/></svg>');
-            transform: rotate(180deg);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%239370DB" d="M50,20 L60,40 L80,50 L60,60 L50,80 L40,60 L20,50 L40,40 Z"/></svg>');
         }
     </style>
 </head>
@@ -165,28 +184,28 @@
         <div class="decoration bottom-left"></div>
         <div class="decoration bottom-right"></div>
         
-        <h1 class="game-title">成语接龙</h1>
+        <h1 class="game-title">成语バトル</h1>
         
         <div class="game-area">
             <div class="current-idiom" id="currentIdiom">
-                请输入一个成语开始游戏
+                请输入一个成语开始游戏 ✧
             </div>
             
-            <input type="text" id="idiomInput" placeholder="请输入成语..." />
+            <input type="text" id="idiomInput" placeholder="请输入成语 (四字熟語)..." />
             
             <div class="feedback" id="feedback"></div>
             
-            <button id="submitBtn">提交</button>
-            <button id="hintBtn">提示</button>
-            <button id="resetBtn">重新开始</button>
+            <button id="submitBtn">提交 ✓</button>
+            <button id="hintBtn">提示 ★</button>
+            <button id="resetBtn">重新开始 ↺</button>
             
             <div class="score">
-                当前分数: <span id="score">0</span>
+                スコア: <span id="score">0</span>
             </div>
         </div>
         
         <div class="history">
-            <div class="history-title">成语记录</div>
+            <div class="history-title">成语履歴</div>
             <div id="historyList"></div>
         </div>
     </div>
@@ -331,7 +350,7 @@
                                    '<span class="last-char">' + lastChar + '</span>';
                 currentIdiomElement.innerHTML = displayText;
             } else {
-                currentIdiomElement.innerHTML = "请输入一个成语开始游戏";
+                currentIdiomElement.innerHTML = "请输入一个成语开始游戏 ✧";
             }
         }
         
